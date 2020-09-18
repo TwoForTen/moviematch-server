@@ -2,5 +2,14 @@
   "name": "moviematch-server",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.5",
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "dev": "nodemon ./app.js"
+  }
 }
