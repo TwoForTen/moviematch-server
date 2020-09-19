@@ -1,4 +1,4 @@
-const { Schema } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema(
   {
@@ -8,10 +8,12 @@ const userSchema = new Schema(
     familyName: String,
     photoUrl: String,
     email: String,
-    matchedMovies: [String],
-    watchedMovies: [String],
+    matchedWith: String,
+    matchedMovies: [Number],
+    watchedMovies: [Number],
+    ignoredMovies: [Number],
   },
   { _id: false, versionKey: false }
 );
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = model('User', userSchema);
