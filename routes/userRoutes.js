@@ -37,6 +37,31 @@ route.get('/user', async (req, res) => {
   }
 });
 
+route.get('/users', async (req, res) => {
+  const { q, _id } = req.query;
+  try {
+    const users = await User.find({
+      _id: { $not: { $regex: _id } },
+      $or: [
+        {
+          givenName: { $regex: q, $options: 'iy' },
+        },
+        { name: { $regex: q, $options: 'iy' } },
+        { email: { $regex: q, $options: 'iy' } },
+        {
+          familyName: { $regex: q, $options: 'iy' },
+        },
+      ],
+    })
+      .collation({ locale: 'en', strength: 1 })
+      .limit(20);
+
+    res.send(users);
+  } catch (err) {
+    return res.status(404);
+  }
+});
+
 route.post('/user/movies', async (req, res) => {
   const { _id, watchedMovies, ignoredMovies } = req.body;
   try {
