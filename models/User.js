@@ -9,6 +9,8 @@ const userSchema = new Schema(
     photoUrl: String,
     email: String,
     matchedWith: String,
+    sentPairRequest: String,
+    receivedPairRequests: [String],
     matchedMovies: [Number],
     watchedMovies: [Number],
     ignoredMovies: [Number],

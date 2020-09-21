@@ -15,25 +15,27 @@ route.post('/user', async (req, res) => {
       name,
       photoUrl,
       matchedWith: null,
+      sentPairRequest: null,
+      receivedPairRequests: [],
       matchedMovies: [],
       watchedMovies: [],
       ignoredMovies: [],
     });
 
-    res.send(newUser);
+    return res.send(newUser);
   } catch (err) {
-    res.status(400);
+    return res.status(400);
   }
 });
 
 route.get('/user', async (req, res) => {
-  const { id } = req.query;
+  const { _id } = req.query;
 
   try {
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id });
     return res.send(user);
   } catch (err) {
-    res.status(400);
+    return res.status(400);
   }
 });
 
@@ -56,7 +58,23 @@ route.get('/users', async (req, res) => {
       .collation({ locale: 'en', strength: 1 })
       .limit(20);
 
-    res.send(users);
+    return res.send(users);
+  } catch (err) {
+    return res.status(404);
+  }
+});
+
+route.get('/users/pair', async (req, res) => {
+  const { q, _id } = req.query;
+  try {
+    const users = await User.find({
+      _id: { $not: { $regex: _id } },
+      email: q + '@gmail.com',
+    })
+      .collation({ locale: 'en', strength: 1 })
+      .limit(20);
+
+    return res.send(users);
   } catch (err) {
     return res.status(404);
   }
@@ -64,53 +82,55 @@ route.get('/users', async (req, res) => {
 
 route.post('/user/movies', async (req, res) => {
   const { _id, watchedMovies, ignoredMovies } = req.body;
+  let user = null;
   try {
     if (watchedMovies)
-      await User.updateOne(
+      user = await User.findOneAndUpdate(
         { _id },
         {
           $push: {
             watchedMovies,
           },
-        }
+        },
+        { new: true }
       );
     if (ignoredMovies)
-      await User.updateOne(
+      user = await User.findOneAndUpdate(
         { _id },
         {
           $push: {
             ignoredMovies,
           },
-        }
+        },
+        { new: true }
       );
 
-    const user = await User.findOne({ _id });
-
-    res.send(user);
+    return res.send(user);
   } catch (err) {
-    res.status(400);
+    return res.status(400);
   }
 });
 
 route.post('/user/movies/delete', async (req, res) => {
   const { _id, watchedMovies, ignoredMovies } = req.body;
+  let user = null;
   try {
     if (watchedMovies)
-      await User.updateOne(
+      user = await User.findOneAndUpdate(
         { _id },
-        { $pull: { watchedMovies: { $in: watchedMovies } } }
+        { $pull: { watchedMovies: { $in: watchedMovies } } },
+        { new: true }
       );
     if (ignoredMovies)
-      await User.updateOne(
+      user = await User.updateOne(
         { _id },
-        { $pull: { ignoredMovies: { $in: ignoredMovies } } }
+        { $pull: { ignoredMovies: { $in: ignoredMovies } } },
+        { new: true }
       );
 
-    const user = await User.findOne({ _id });
-
-    res.send(user);
+    return res.send(user);
   } catch (err) {
-    res.status(400);
+    return res.status(400);
   }
 });
 
