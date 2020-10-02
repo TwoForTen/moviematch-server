@@ -5,7 +5,7 @@ route.post('/user', async (req, res) => {
   const { _id, email, familyName, givenName, name, photoUrl } = req.body;
   try {
     const userExists = await User.findOne({ _id });
-    if (userExists) return res.send('User exists');
+    if (userExists) return res.send(userExists);
 
     const newUser = await User.create({
       _id,
@@ -33,9 +33,25 @@ route.get('/user', async (req, res) => {
 
   try {
     const user = await User.findOne({ _id });
-    return res.send(user);
+    if (!user) throw new Error();
+    res.send(user);
   } catch (err) {
-    return res.status(400);
+    res.status(400);
+  }
+});
+
+route.post('/user/requests', async (req, res) => {
+  const { _ids } = req.body;
+  try {
+    const requests = await User.find({
+      _id: {
+        $in: _ids,
+      },
+    });
+
+    res.send(requests);
+  } catch (err) {
+    res.status(400);
   }
 });
 
@@ -105,7 +121,7 @@ route.post('/user/movies', async (req, res) => {
         { new: true }
       );
 
-    return res.send(user);
+    res.send(user);
   } catch (err) {
     return res.status(400);
   }
@@ -122,7 +138,7 @@ route.post('/user/movies/delete', async (req, res) => {
         { new: true }
       );
     if (ignoredMovies)
-      user = await User.updateOne(
+      user = await User.findOneAndUpdate(
         { _id },
         { $pull: { ignoredMovies: { $in: ignoredMovies } } },
         { new: true }

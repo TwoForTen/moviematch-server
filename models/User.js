@@ -8,7 +8,11 @@ const userSchema = new Schema(
     familyName: String,
     photoUrl: String,
     email: String,
-    matchedWith: String,
+    matchedWith: {
+      matchId: String,
+      notifications: Number,
+      match: String,
+    },
     sentPairRequest: String,
     receivedPairRequests: [String],
     matchedMovies: [Number],
