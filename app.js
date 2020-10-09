@@ -11,7 +11,7 @@ const io = socketio(server);
 const PORT = process.env.PORT || 3000;
 
 mongoose.connect(
-  'mongodb://localhost:27017/moviematch',
+  'mongodb+srv://admin:wgdWZLTDcPMj2rG7@moviematch-1.kpsx3.mongodb.net/moviematch?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,

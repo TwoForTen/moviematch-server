@@ -36,7 +36,7 @@ route.get('/user', async (req, res) => {
     if (!user) throw new Error();
     res.send(user);
   } catch (err) {
-    res.status(400);
+    res.status(400).send(err);
   }
 });
 
@@ -76,7 +76,7 @@ route.get('/users', async (req, res) => {
 
     return res.send(users);
   } catch (err) {
-    return res.status(404);
+    return res.status(404).send(err);
   }
 });
 
@@ -92,7 +92,7 @@ route.get('/users/pair', async (req, res) => {
 
     return res.send(users);
   } catch (err) {
-    return res.status(404);
+    return res.status(404).send(err);
   }
 });
 
@@ -123,7 +123,7 @@ route.post('/user/movies', async (req, res) => {
 
     res.send(user);
   } catch (err) {
-    return res.status(400);
+    return res.status(400).send(err);
   }
 });
 
@@ -146,7 +146,7 @@ route.post('/user/movies/delete', async (req, res) => {
 
     return res.send(user);
   } catch (err) {
-    return res.status(400);
+    return res.status(400).send(err);
   }
 });
 
