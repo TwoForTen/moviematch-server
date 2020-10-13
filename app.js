@@ -211,6 +211,10 @@ io.on('connection', (socket) => {
   socket.on('leaveMatch', (matchId) => {
     socket.leave(matchId);
   });
+
+  socket.on('userDisconnect', (_id) => {
+    delete clients[_id];
+  })
 });
 
 const routes = require('./routes/userRoutes');
