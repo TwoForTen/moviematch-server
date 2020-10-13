@@ -24,7 +24,7 @@ route.post('/user', async (req, res) => {
 
     return res.send(newUser);
   } catch (err) {
-    return res.status(400);
+    return res.status(400).send(err);
   }
 });
 
